@@ -1,19 +1,22 @@
 import * as PIXI from 'pixi.js';
 
-const app = new PIXI.Application({ width: 256, height: 256 });
+const width = 512;
+const height = 512;
+const app = new PIXI.Application({ width, height });
+const renderer = app.renderer;
+const stage = app.stage;
 document.body.appendChild(app.view);
 
-const stage = app.stage;
 
-// Calculate points of a hexagon where (x, y) are the coordinates of the centre
+// Draws a hexagon where (x, y) are the coordinates of the centre
 // r is the radius of the hexagon.
-// Returns an array of points.
-const calculateHexCoords = (x, y, r) => {
+// returns: shape Polygon object
+const getHex = (x, y, r, renderer, stage) => {
   //60 degrees in radians = 1.04718
   const offsetX = r * Math.cos(1.04718);
   const offsetY = r * Math.sin(1.04718);
 
-  return [
+  const points = [
     new PIXI.Point(x+r, y),
     new PIXI.Point(x+offsetX, y+offsetY),
     new PIXI.Point(x-offsetX, y+offsetY),
@@ -22,18 +25,33 @@ const calculateHexCoords = (x, y, r) => {
     new PIXI.Point(x+offsetX, y-offsetY),
     new PIXI.Point(x+r, y),
   ];
-};
 
-for (let i = 20; i < 260; i += 40) {
-  const coordinates = calculateHexCoords(i, 20, 20);
-
-  const nextHex = new PIXI.Graphics()
+  const shape = new PIXI.Graphics()
     .lineStyle(1, 0xFFFFFF)
-    .drawPolygon(coordinates);
-  // nextHex.hitArea = new PIXI.Polygon(coordinates);
-  // nextHex.interactive = true;
-  // nextHex.mouseover = (data) => {
-  //   console.log(data);
-  // };
-  stage.addChild(nextHex);
+    .drawPolygon(points);
+
+  shape.hitArea = new PIXI.Polygon(points);
+  shape.interactive = true;
+  shape.mouseover = () => {
+    shape.clear();
+    shape.beginFill(0x00FFFF);
+    shape.lineStyle(1, 0xFFFFFF)
+    shape.drawPolygon(points);
+
+    renderer.render(stage);
+  };
+
+  shape.mouseout = () => {
+    shape.clear();
+    shape.beginFill(0x000000);
+    shape.lineStyle(1, 0xFFFFFF)
+    shape.drawPolygon(points);
+
+    renderer.render(stage);
+  }
+
+  return shape;
 }
+
+const startingPoint = getHex(width / 2, height / 2, 20, renderer, stage);
+stage.addChild(startingPoint);

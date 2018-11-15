@@ -17,7 +17,6 @@ startingTile.shape.mouseover = () => {
   startingTile.shape.beginFill(0x00FFFF);
   startingTile.shape.lineStyle(1, 0xFFFFFF)
   startingTile.shape.drawPolygon(startingTile.points);
-
   startingTile.getSurroundingTiles().forEach(hex => stage.addChild(hex.shape));
 
   renderer.render(stage);
@@ -28,6 +27,7 @@ startingTile.shape.mouseout = () => {
   startingTile.shape.beginFill(0x000000);
   startingTile.shape.lineStyle(1, 0xFFFFFF)
   startingTile.shape.drawPolygon(startingTile.points);
+  startingTile.getSurroundingTiles().forEach(hex => stage.removeChild(hex.shape));
 
   renderer.render(stage);
-}
+};

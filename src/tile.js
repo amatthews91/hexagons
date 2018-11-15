@@ -24,12 +24,12 @@ export default class Tile {
 
       //Cache so they can be removed from the stage by refence (and remove the need to recalculate)
       this.adjacents = [
-        Tile.build(adjacentCentre1.x, adjacentCentre1.y, 20),
-        Tile.build(adjacentCentre2.x, adjacentCentre2.y, 20),
-        Tile.build(adjacentCentre3.x, adjacentCentre3.y, 20),
-        Tile.build(adjacentCentre4.x, adjacentCentre4.y, 20),
-        Tile.build(adjacentCentre5.x, adjacentCentre5.y, 20),
-        Tile.build(adjacentCentre6.x, adjacentCentre6.y, 20)
+        Tile.build(adjacentCentre1.x, adjacentCentre1.y, 20, true),
+        Tile.build(adjacentCentre2.x, adjacentCentre2.y, 20, true),
+        Tile.build(adjacentCentre3.x, adjacentCentre3.y, 20, true),
+        Tile.build(adjacentCentre4.x, adjacentCentre4.y, 20, true),
+        Tile.build(adjacentCentre5.x, adjacentCentre5.y, 20, true),
+        Tile.build(adjacentCentre6.x, adjacentCentre6.y, 20, true)
       ];
     }
 
@@ -37,9 +37,10 @@ export default class Tile {
   }
 
   // Draws a hexagon where (x, y) are the coordinates of the centre
+  // isPermanent is whether or not the tile is a preview tile vs a permanent
   // r is the radius of the hexagon.
   // returns: shape Polygon object
-  static build(x, y, r) {
+  static build(x, y, r, isPreview) {
     //60 degrees in radians = 1.04718
     // OffsetX = length between center and a point (r) * cos(60 degrees)
     // OffsetX = length between center and a point (r) * sin(60 degrees)
@@ -58,7 +59,7 @@ export default class Tile {
     ];
 
     const shape = new PIXI.Graphics()
-      .lineStyle(1, 0xFFFFFF)
+      .lineStyle(1, 0xFFFFFF, isPreview? 0.3 : 1)
       .drawPolygon(points);
 
     shape.hitArea = new PIXI.Polygon(points);

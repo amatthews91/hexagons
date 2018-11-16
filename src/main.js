@@ -9,15 +9,35 @@ const renderer = app.renderer;
 const stage = app.stage;
 document.body.appendChild(app.view);
 
-const startingTile = Tile.build(width / 2, height / 2, 20);
-stage.addChild(startingTile.shape);
+const TILE_RADIUS = 20;
+const previewTiles = [];
 
-startingTile.shape.mousedown = () => {
-  startingTile.shape.clear();
-  startingTile.shape.beginFill(0x00FFFF);
-  startingTile.shape.lineStyle(1, 0xFFFFFF)
-  startingTile.shape.drawPolygon(startingTile.points);
-  startingTile.getSurroundingTiles().forEach(hex => stage.addChild(hex.shape));
+const map = {
+  tiles: []
+};
+
+const togglePreviewTiles = (selectedTile) => {
+  if (previewTiles.length === 0) {
+    selectedTile.select();
+    const newPreviewTiles = selectedTile.getSurroundingTiles();
+    previewTiles.push(...newPreviewTiles);
+    previewTiles.forEach(tile => stage.addChild(tile.shape));
+  } else {
+    previewTiles.forEach(tile => stage.removeChild(tile.shape));
+    previewTiles.splice(0, previewTiles.length);
+  }
 
   renderer.render(stage);
 };
+
+const addPermanentTile = (x, y, renderer) => {
+  const newTile = Tile.build(x, y, TILE_RADIUS);
+  map.tiles.push(newTile);
+  stage.addChild(newTile.shape);
+
+  newTile.shape.mousedown = () => {
+    togglePreviewTiles(newTile, renderer);
+  };
+};
+
+addPermanentTile(width / 2, height / 2, TILE_RADIUS);

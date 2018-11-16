@@ -1,11 +1,14 @@
+const LINE_COLOUR = 0xFFFFFF;
+
 export default class Tile {
 
-  constructor(x, y, r, points, shape) {
+  constructor(x, y, r, points, shape, isPreview) {
     this.x = x;
     this.y = y;
     this.r = r;
     this.points = points;
     this.shape = shape;
+    this.isPreview = isPreview;
   }
 
   getSurroundingTiles() {
@@ -36,9 +39,16 @@ export default class Tile {
     return this.adjacents;
   }
 
+  select() {
+    this.shape.clear();
+    this.shape.beginFill(0x00FFFF);
+    this.shape.lineStyle(1, LINE_COLOUR)
+    this.shape.drawPolygon(this.points);
+  }
+
   // Draws a hexagon where (x, y) are the coordinates of the centre
-  // isPermanent is whether or not the tile is a preview tile vs a permanent
-  // r is the radius of the hexagon.
+  // isPreview is whether or not the tile is a preview tile vs a permanent
+  // r is the "radius" of the hexagon (distance from centre to a point)
   // returns: shape Polygon object
   static build(x, y, r, isPreview) {
     //60 degrees in radians = 1.04718
@@ -59,12 +69,12 @@ export default class Tile {
     ];
 
     const shape = new PIXI.Graphics()
-      .lineStyle(1, 0xFFFFFF, isPreview? 0.3 : 1)
+      .lineStyle(1, LINE_COLOUR, isPreview? 0.3 : 1)
       .drawPolygon(points);
 
     shape.hitArea = new PIXI.Polygon(points);
     shape.interactive = true;
 
-    return new Tile(x, y, r, points, shape);
+    return new Tile(x, y, r, points, shape, isPreview);
   }
 }

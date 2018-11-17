@@ -44,6 +44,15 @@ export default class Tile {
     this.shape.beginFill(0x00FFFF);
     this.shape.lineStyle(1, LINE_COLOUR)
     this.shape.drawPolygon(this.points);
+    this.isSelected = true;
+  }
+
+  deselect() {
+    this.shape.clear();
+    this.shape.beginFill(0x000000);
+    this.shape.lineStyle(1, LINE_COLOUR)
+    this.shape.drawPolygon(this.points);
+    this.isSelected = false;
   }
 
   // Draws a hexagon where (x, y) are the coordinates of the centre

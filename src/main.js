@@ -31,7 +31,11 @@ function selectTile(selectedTile) {
       // ...and there are NO preview tiles currently displayed...
       // ...then select the current tile and add the preview tiles surrounding it.
       selectedTile.select();
-      const newPreviewTiles = selectedTile.getSurroundingTiles();
+
+      // Make sure not to add any preview tiles if there exists a permanent tile in its place already.
+      const newPreviewTiles = selectedTile.getSurroundingTiles()
+        .filter(newPreviewTile => !map.tiles.some(permanentTile => permanentTile.x === newPreviewTile.x && permanentTile.y === newPreviewTile.y));
+
       previewTiles.push(...newPreviewTiles);
 
       previewTiles.forEach(tile => {
@@ -48,7 +52,7 @@ function selectTile(selectedTile) {
       previewTiles.splice(0, previewTiles.length);
     }
   }
-
+1
   renderer.render(stage);
 }
 

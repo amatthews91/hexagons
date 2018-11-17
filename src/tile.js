@@ -1,5 +1,11 @@
 const LINE_COLOUR = 0xFFFFFF;
 
+function getPointWithOffsets(x, xOffset, y, yOffset) {
+  const newX = Math.round(x + xOffset);
+  const newY = Math.round(y + yOffset)
+  return new PIXI.Point(newX, newY)
+};
+
 export default class Tile {
 
   constructor(x, y, r, points, shape, isPreview) {
@@ -17,13 +23,13 @@ export default class Tile {
 
     if (!this.adjacents) {
       // Length from centre of tile to the middle of a side.
-      const lengthToSide = Math.cos(0.5235988) * this.r;
-      const adjacentCentre1 = new PIXI.Point(this.x + ((lengthToSide * Math.cos(0.5235988)) * 2), this.y + ((lengthToSide * Math.sin(0.5235988)) * 2));
-      const adjacentCentre2 = new PIXI.Point(this.x + ((lengthToSide * Math.cos(1.570796)) * 2), this.y + ((lengthToSide * Math.sin(1.570796)) * 2));
-      const adjacentCentre3 = new PIXI.Point(this.x + ((lengthToSide * Math.cos(2.617994)) * 2), this.y + ((lengthToSide * Math.sin(2.617994)) * 2));
-      const adjacentCentre4 = new PIXI.Point(this.x - ((lengthToSide * Math.cos(0.5235988)) * 2), this.y - ((lengthToSide * Math.sin(0.5235988)) * 2));
-      const adjacentCentre5 = new PIXI.Point(this.x - ((lengthToSide * Math.cos(1.570796)) * 2), this.y - ((lengthToSide * Math.sin(1.570796)) * 2));
-      const adjacentCentre6 = new PIXI.Point(this.x - ((lengthToSide * Math.cos(2.617994)) * 2), this.y - ((lengthToSide * Math.sin(2.617994)) * 2));
+      const lengthToSide = Math.floor(Math.cos(0.5235988) * this.r);
+      const adjacentCentre1 = getPointWithOffsets(this.x, ((lengthToSide * Math.cos(0.5235988)) * 2), this.y, ((lengthToSide * Math.sin(0.5235988)) * 2));
+      const adjacentCentre2 = getPointWithOffsets(this.x, ((lengthToSide * Math.cos(1.570796)) * 2), this.y, ((lengthToSide * Math.sin(1.570796)) * 2));
+      const adjacentCentre3 = getPointWithOffsets(this.x, ((lengthToSide * Math.cos(2.617994)) * 2), this.y, ((lengthToSide * Math.sin(2.617994)) * 2));
+      const adjacentCentre4 = getPointWithOffsets(this.x, -((lengthToSide * Math.cos(0.5235988)) * 2), this.y, -((lengthToSide * Math.sin(0.5235988)) * 2));
+      const adjacentCentre5 = getPointWithOffsets(this.x, -((lengthToSide * Math.cos(1.570796)) * 2), this.y, -((lengthToSide * Math.sin(1.570796)) * 2));
+      const adjacentCentre6 = getPointWithOffsets(this.x, -((lengthToSide * Math.cos(2.617994)) * 2), this.y, -((lengthToSide * Math.sin(2.617994)) * 2));
 
       //Cache so they can be removed from the stage by refence (and remove the need to recalculate)
       this.adjacents = [
@@ -64,17 +70,17 @@ export default class Tile {
     // OffsetX = length between center and a point (r) * cos(60 degrees)
     // OffsetX = length between center and a point (r) * sin(60 degrees)
     // This will produce the point at the bottom right of the hex (with 0,0 being at the top left of the canvas)
-    const offsetX = r * Math.cos(1.04718);
-    const offsetY = r * Math.sin(1.04718);
+    const xOffset = Math.floor(r * Math.cos(1.04718));
+    const yOffset = Math.floor(r * Math.sin(1.04718));
 
     const points = [
-      new PIXI.Point(x+r, y),
-      new PIXI.Point(x+offsetX, y+offsetY),
-      new PIXI.Point(x-offsetX, y+offsetY),
-      new PIXI.Point(x-r, y),
-      new PIXI.Point(x-offsetX, y-offsetY),
-      new PIXI.Point(x+offsetX, y-offsetY),
-      new PIXI.Point(x+r, y),
+      getPointWithOffsets(x, r, y, 0),
+      getPointWithOffsets(x, xOffset, y, yOffset),
+      getPointWithOffsets(x, -xOffset, y, yOffset),
+      getPointWithOffsets(x, -r, y, 0),
+      getPointWithOffsets(x, -xOffset, y, -yOffset),
+      getPointWithOffsets(x, xOffset, y, -yOffset),
+      getPointWithOffsets(x, r, y, 0),
     ];
 
     const shape = new PIXI.Graphics()

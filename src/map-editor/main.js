@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import Tile from './tile';
+import Tile from '../shared/tile';
 import './style.css';
 
 const width = 512;

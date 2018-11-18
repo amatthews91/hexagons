@@ -6,7 +6,7 @@ module.exports = {
     contentBase: './dist',
     hot: true
   },
-  entry: './src/main.js',
+  entry: './src/map-editor/main.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist')

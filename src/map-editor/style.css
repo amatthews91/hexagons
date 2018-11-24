@@ -1,0 +1,12 @@
+#content {
+  display: flex;
+}
+
+#map-data {
+  border: 1px solid;
+  padding: 10px;
+}
+
+#view {
+  margin-right: 10px;
+}
